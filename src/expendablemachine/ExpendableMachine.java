@@ -6,11 +6,11 @@
 package expendablemachine;
 
 import expendablemachine.equipment.ProductContainer;
-import expendablemachine.grocery.Product;
-import java.util.ArrayList;
-import java.util.Date;
+import expendablemachine.grocery.ProductProvider;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  *
@@ -18,48 +18,58 @@ import java.util.List;
  */
 public class ExpendableMachine {
     
-    protected List<Product> container;
-
+    protected Map<String, ContainerInterface> container;    
+    protected ProductProvider provider;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
 
-        ExpendableMachine machine = new ExpendableMachine();
+        ExpendableMachine machine   = new ExpendableMachine();
+        machine.provider    = new ProductProvider();
+        machine.container   = new HashMap();
         
-        System.out.println("===== WELCOME ======");
+        machine.container.put("3A", new ProductContainer(machine.provider.getSodas(), 1.65, "3A"));
+        machine.container.put("3B", new ProductContainer(machine.provider.getCookies(), 0.70, "3B"));
         
-        List<Product> products = new ArrayList<>();
-        
-        Date expDate = new Date("11/23/2015 15:32:12");
-        
-        Product soda1 = new Product("Kola Real", expDate);
-        products.add(new Product("Inca Kola", expDate));
-        products.add(new Product("Coca Cola", expDate));
-        Product soda4 = new Product("Guaraná", expDate);
-        
-        ProductContainer container = new ProductContainer(0.80);
-        container.setCode("3A");
-        container.add(soda1);
-        container.add(soda4);
-        container.addAll(products);
-        
-        machine.ContainerPresenter(container);
+        machine.powerOn();
     }
     
-    public void ContainerPresenter(ProductContainer container) {
-        System.out.printf("====== CONTAINER %s ======", container.getCode());
-        System.out.println();
-        System.out.printf("Unit price:      S/ %s \n", container.getUnitPrice());
-        System.out.printf("Total price:     S/ %s \n", container.getTotalPrice());
-        System.out.printf("Identify code:   %s \n", container.getCode());
-        System.out.printf("Total products:  %s \n", container.size());
+    public void powerOn() {
+        Scanner sc = new Scanner(System.in);
+        String opc;
         
-        Iterator it = container.iterator();        
-        while(it.hasNext()) {
-            System.out.println( " > " + it.next() );
-        }        
+        while(true) {  
+            System.out.println("===========================");
+            System.out.println("===== VENDING MACHINE =====");            
+            showProducts();
+            System.out.println("=== Para salir presione X =");
+            System.out.println("===========================");
+            System.out.print("> Elige un producto: ");
+            opc = sc.nextLine();
+            
+            if ("X".equals(opc)) {
+                break;
+            } 
+            else if(this.container.containsKey(opc)) {
+                ProductContainer elem = (ProductContainer) this.container.get(opc);
+                System.out.println("You pick: " + elem.pop());
+            }
+        }
+    }
+    
+    private void showProducts() {
+        
         System.out.println("===========================");
+        System.out.println("======== PRODUCTOS ========");
+        Iterator itt =  this.container.values().iterator();
+        
+        //TODO: Check if container is empty
+        while(itt.hasNext()) {
+            System.out.println("************");
+            System.out.println( itt.next() );
+            System.out.println("************");
+        }
     }
 }

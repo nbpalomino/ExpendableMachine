@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author nbpalomino
  */
-public class Product implements ProductInterface {
+public class Grocery implements ProductInterface {
     
     protected String name;
     protected Date expirationDate;
@@ -22,17 +22,17 @@ public class Product implements ProductInterface {
      * @param name
      * @param expirationDate
      */
-    public Product(String name, Date expirationDate) {
+    public Grocery(String name, Date expirationDate) {
         this.name = name;
         this.expirationDate = expirationDate;        
     }
     
-    public Product setName(String name) {
+    public Grocery setName(String name) {
         this.name = name;
         return this;
     }
     
-    public Product setExpirationDate(Date expDate) {
+    public Grocery setExpirationDate(Date expDate) {
         this.expirationDate = expDate;
         return this;
     }
